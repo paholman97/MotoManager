@@ -1,0 +1,57 @@
+﻿@page
+@model IndexModel
+<style>
+    .bikeCol > a {
+        color: #000;
+    }
+    .bikeCol img {
+        transition: 0.2s;
+    }
+        .bikeCol img:hover {
+            opacity: 0.8;
+            transition: 0.2s;
+            transform: scale(1.01);
+            cursor: pointer;
+        }
+        .imgRounded:hover {
+            opacity: 0.8;
+            transition: 0.2s;
+            transform: scale(1.01);
+            cursor: pointer;
+        }
+</style>
+<div class="row justify-content-center w-100 m-0">
+    <div class="col-11 p-5 my-auto">
+        <div class="row justify-content-center bikeSelectRow">
+            @foreach (var bike in Model.Bikes)
+            {
+                <div class="col-xl-3 col-md-4 col-sm-6 bikeCol text-center rounded p-3 mt-2">
+                    <a class="text-decoration-none" asp-page="BikeDetails" asp-route-id="@bike.BikeID">
+                        @if (bike.ImagePath != null)
+                        {
+                            <img src="@bike.ImagePath" class="imgRounded shadow" alt="bikeImg" />
+                        }
+                        else
+                        {
+                            <img src="~/Images/DefaultBikeImage.png" class="imgRounded shadow" alt="bikeImg" />
+                        }
+                        <h2 class="mb-0">
+                            @bike.Manufacturer.ManufacturerName @bike.Model
+                        </h2>
+                    </a>
+                </div>
+            }
+            <div class="col-xl-3 col-md-4 col-sm-6 bikeCol text-center mt-2 p-3">
+                <a asp-page="/NewBikeDetails" class="text-decoration-none text-black">
+                    <div class="imgRounded shadow m-auto">
+                        <div class="row h-100">
+                            <div class="col-12 my-auto">
+                                <h2>New bike <i class="fa fa-plus"></i></h2>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

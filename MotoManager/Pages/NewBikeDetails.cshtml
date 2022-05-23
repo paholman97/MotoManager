@@ -1,0 +1,168 @@
+﻿@page
+@model MotoManager.Pages.NewBikeDetailsModel
+<style>
+    input, select {
+        width: 100%;
+    }
+    textarea {
+        border-radius: 5px;
+    }
+    @@media (max-width: 700px) {
+        table td {
+            display: block;
+        }
+    }
+</style>
+<form enctype="multipart/form-data" method="post" autocomplete="off">
+    <div class="newBikeModelDetails row justify-content-center w-100 m-0 mt-3">
+        <div class="col-xl-8 col-11 rounded p-3 mb-4 shadow">
+            <h2>Bike Details</h2>
+            <table class="table table-borderless mb-0 w-100">
+                <tbody>
+                    <tr>
+                        <td>Manufacturer:</td>
+                        <td>
+                            <select asp-items="Model.Manufacturers" asp-for="BikeModel.ManufacturerID">
+                                <option>Please select</option>
+                            </select>
+                        </td>
+                        <td>Model:</td>
+                        <td>
+                            <input asp-for="BikeModel.Model" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Registration:</td>
+                        <td>
+                            <input asp-for="BikeModel.Registration" />
+                        </td>
+                        <td>Colour:</td>
+                        <td>
+                            <input asp-for="BikeModel.Colour" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>VIN:</td>
+                        <td>
+                            <input asp-for="BikeModel.VIN" />
+                        </td>
+                        <td>Engine Number:</td>
+                        <td>
+                            <input asp-for="BikeModel.EngineNumber" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Year:</td>
+                        <td>
+                            <input asp-for="BikeModel.Year" />
+                        </td>
+                        <td>Engine Size: (cc)</td>
+                        <td>
+                            <input asp-for="BikeModel.EngineSize" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mileage:</td>
+                        <td>
+                            <input asp-for="BikeModel.Mileage" />
+                        </td>
+                        <td>Purchase Price: (£)</td>
+                        <td>
+                            <input asp-for="BikeModel.PurchasePrice" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Image:</td>
+                        <td colspan="3">
+                            <input type="file" asp-for="BikeModel.File" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xl-5 col-11 rounded shadow p-3 me-xl-2 mb-xl-0 mb-4">
+            <h2>Maintenance Specs</h2>
+            <table class="table table-borderless mb-0">
+                <tbody>
+                    @for (var i = 0; i < Model.MaintenanceSpecs.Count(); i++)
+                    {
+                        <tr>
+                            <td class="d-none">
+                                <input value="@Model.MaintenanceSpecs[i].MaintenanceSpecID" asp-for="BikeMaintenanceSpecs[i].MaintenanceSpecID" />
+                            </td>
+                            <td>@Model.MaintenanceSpecs[i].SpecName</td>
+                            <td>
+                                <input asp-for="BikeMaintenanceSpecs[i].SpecValue" />
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xl-5 col-11 rounded shadow p-3 ms-xl-2">
+            <h2>Service History</h2>
+            <table id="serviceHistoryTable" class="table table-borderless mb-0 w-100">
+                <tbody>
+                    <tr>
+                        <td>Work Description:</td>
+                        <td>
+                            <textarea class="w-100" asp-for="ServiceHistory[0].Description"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Performed By:</td>
+                        <td>
+                            <input type="text" asp-for="ServiceHistory[0].PerformedBy" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mileage:</td>
+                        <td>
+                            <input type="number" asp-for="ServiceHistory[0].Mileage" />
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>
+                            <p id="addServiceHistoryRow" class="text-decoration-none cursor-pointer">Add <i class="fa fa-plus-circle"></i></p>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="col-xl-2 col-md-4 col-sm-6 col-8 rounded shadow p-3 mt-4 mb-3 text-center">
+            <button class="btn btn-dark" asp-page-handler="SaveNewBikeDetails">Save <i class="fa fa-save"></i></button>
+            <button class="btn btn-light" asp-page-handler="CancelNewBike">Cancel <i class="fa fa-times"></i></button>
+        </div>
+    </div>
+</form>
+@section Scripts
+{
+    <script type="text/javascript">
+    var i = 1;
+    $("#addServiceHistoryRow").click(function () {
+        $("#serviceHistoryTable").append(
+            '<tr style="border-top: 1px solid var(--white)">' +
+                '<td>Work Description:</td>' +
+                '<td>' +
+                    '<textarea class="w-100" name="ServiceHistory[' + i + '].Description"></textarea>' +
+                '</td>' +
+            '</tr>' +
+            '<tr>' +
+                '<td>Performed By:</td>' +
+                '<td>' +
+                    '<input type="text" name="ServiceHistory[' + i + '].PerformedBy" />' +
+                '</td>' +
+            '</tr>' +
+            '<tr>' +
+                '<td>Mileage:</td>' +
+                '<td>' +
+                    '<input type="number" name="ServiceHistory[' + i + '].Mileage" />' +
+                '</td>' +
+            '</tr>'
+        )
+        i++;
+    });
+    </script>
+}

@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Motorcycle Management System" />
+    <title>MotoManager</title>
+    <link rel="stylesheet" href="/css/bundle.css" />
+</head>
+<body>
+    <div class="navbar pt-0">
+        <div class="navbar-brand p-3 shadow" style="border-bottom-right-radius: 30px">
+            <h2 class="m-0">
+                <a asp-page="/Index" class="text-black text-decoration-none">MotoManager</a>
+            </h2>
+        </div>
+    </div>
+    @RenderBody()
+    <script src="/js/bundle.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

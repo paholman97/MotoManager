@@ -1,0 +1,117 @@
+﻿@page
+@model MotoManager.Pages.BikeDetailsModel
+<style>
+    table td:nth-child(even) {
+        font-weight: bold;
+    }
+    @@media(max-width:768px) {
+        #largeBikeIcon {
+            display: none!important;
+        }
+        #smallBikeIcon {
+            display: inline!important;
+        }
+    }
+    @@media(max-width: 460px) {
+        .responsiveTable td {
+            display: inline-block;
+            width: 50%;
+        }
+    }
+</style>
+<div class="row justify-content-center m-0 mt-3">
+    <div class="col-xl-3 col-lg-5 col-md-4">
+        @if (Model.bike.ImagePath != null)
+        {
+            <img src="@Model.bike.ImagePath" id="largeBikeIcon" class="imgRounded shadow" />
+        }
+        else
+        {
+            <img src="/Images/DefaultBikeImage.png" id="largeBikeIcon" class="imgRounded shadow" />
+        }
+    </div>
+    <div class="col-lg-5 col-md-6 my-auto">
+        <h3 class="float-start">
+            @if (Model.bike.ImagePath != null)
+            {
+                <img src="@Model.bike.ImagePath" id="smallBikeIcon" class="imgRounded shadow" style="width:80px!important; height: 80px!important; display: none" />
+            }
+            else
+            {
+                <img src="/Images/DefaultBikeImage.png" id="smallBikeIcon" class="imgRounded shadow" style="width:80px!important; height: 80px!important; display: none" />
+            }
+            @Model.bike.Manufacturer.ManufacturerName @Model.bike.Model
+        </h3>
+        <button class="btn p-0 float-end"><i class="fas fa-pen"></i></button>
+        <table class="table responsiveTable w-100">
+            <tr>
+                <td>Registration</td>
+                <td>@Model.bike.Registration</td>
+                <td>Year</td>
+                <td>@Model.bike.Year</td>
+            </tr>
+            <tr>
+                <td>Colour</td>
+                <td>@Model.bike.Colour</td>
+                <td>Engine Size</td>
+                <td>@Model.bike.EngineSize</td>
+            </tr>
+            <tr>
+                <td>VIN</td>
+                <td>@Model.bike.VIN</td>
+                <td>Engine Number</td>
+                <td>@Model.bike.EngineNumber</td>
+            </tr>
+            <tr>
+                <td>Mileage</td>
+                <td>@Model.bike.Mileage</td>
+                <td>Purchase Price</td>
+                <td>@Model.bike.PurchasePrice</td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="row justify-content-center m-0 mt-3">
+    <div class="col-lg-5">
+        <h3>Maintenance Specs</h3>
+        <table class="table w-100">
+            <thead>
+                <tr>
+                    <th>Maintenance Description</th>
+                    <th>Maintenance Spec</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var maintenanceSpec in Model.bikeMaintenanceSpecs)
+                {
+                    <tr>
+                        <td>@maintenanceSpec.MaintenanceSpec.SpecName</td>
+                        <td>@maintenanceSpec.SpecValue</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-lg-5">
+        <h3>Service History</h3>
+        <table class="table w-100">
+            <thead>
+                <tr>
+                    <th>Service Description</th>
+                    <th>Performed By</th>
+                    <th>Mileage</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var serviceHistory in Model.serviceHistory)
+                {
+                    <tr>
+                        <td>@serviceHistory.Description</td>
+                        <td>@serviceHistory.PerformedBy</td>
+                        <td>@serviceHistory.Mileage</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
