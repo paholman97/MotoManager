@@ -64,7 +64,9 @@
             </tr>
             <tr>
                 <td>Mileage</td>
-                <td>@Model.bike.Mileage</td>
+                <td>
+                    @Model.bike.Mileage <a class="btn btn-dark float-end">Check</a>
+                </td>
                 <td>Purchase Price</td>
                 <td>@Model.bike.PurchasePrice</td>
             </tr>
@@ -113,5 +115,14 @@
                 }
             </tbody>
         </table>
+    </div>
+</div>
+<div id="mileageCheckModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+
+            </div>
+        </div>
     </div>
 </div>
