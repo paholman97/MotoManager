@@ -60,6 +60,7 @@ namespace MotoManager.Data
         public int ServiceHistoryID { get; set; }
         public int? BikeID { get; set; }
         public int? Mileage { get; set; }
+        public int? DueIn { get; set; }
         public string PerformedBy { get; set; }
         public string Description { get; set; }
     }

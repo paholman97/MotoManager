@@ -46,7 +46,7 @@
                         <td>
                             <input asp-for="BikeModel.VIN" />
                         </td>
-                        <td>Engine Number:</td>
+                        <td>Engine number:</td>
                         <td>
                             <input asp-for="BikeModel.EngineNumber" />
                         </td>
@@ -56,7 +56,7 @@
                         <td>
                             <input asp-for="BikeModel.Year" />
                         </td>
-                        <td>Engine Size: (cc)</td>
+                        <td>Engine size: (cc)</td>
                         <td>
                             <input asp-for="BikeModel.EngineSize" />
                         </td>
@@ -66,7 +66,7 @@
                         <td>
                             <input asp-for="BikeModel.Mileage" />
                         </td>
-                        <td>Purchase Price: (£)</td>
+                        <td>Purchase price: (£)</td>
                         <td>
                             <input asp-for="BikeModel.PurchasePrice" />
                         </td>
@@ -104,13 +104,13 @@
             <table id="serviceHistoryTable" class="table table-borderless mb-0 w-100">
                 <tbody>
                     <tr>
-                        <td>Work Description:</td>
+                        <td>Description:</td>
                         <td>
                             <textarea class="w-100" asp-for="ServiceHistory[0].Description"></textarea>
                         </td>
                     </tr>
                     <tr>
-                        <td>Performed By:</td>
+                        <td>Performed by:</td>
                         <td>
                             <input type="text" asp-for="ServiceHistory[0].PerformedBy" />
                         </td>
@@ -119,6 +119,12 @@
                         <td>Mileage:</td>
                         <td>
                             <input type="number" asp-for="ServiceHistory[0].Mileage" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Due in:</td>
+                        <td>
+                            <input type="number" asp-for="ServiceHistory[0].DueIn" />
                         </td>
                     </tr>
                 </tbody>
@@ -143,14 +149,14 @@
     var i = 1;
     $("#addServiceHistoryRow").click(function () {
         $("#serviceHistoryTable").append(
-            '<tr style="border-top: 1px solid var(--white)">' +
-                '<td>Work Description:</td>' +
+            '<tr>' +
+                '<td>Description:</td>' +
                 '<td>' +
                     '<textarea class="w-100" name="ServiceHistory[' + i + '].Description"></textarea>' +
                 '</td>' +
             '</tr>' +
             '<tr>' +
-                '<td>Performed By:</td>' +
+                '<td>Performed by:</td>' +
                 '<td>' +
                     '<input type="text" name="ServiceHistory[' + i + '].PerformedBy" />' +
                 '</td>' +
@@ -159,6 +165,12 @@
                 '<td>Mileage:</td>' +
                 '<td>' +
                     '<input type="number" name="ServiceHistory[' + i + '].Mileage" />' +
+                '</td>' +
+            '</tr>' +
+            '<tr>' +
+                '<td>Due in:</td>' +
+                '<td>' +
+                    '<input type="number" name="ServiceHistory[' + i + '].DueIn" />' +
                 '</td>' +
             '</tr>'
         )

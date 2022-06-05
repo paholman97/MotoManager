@@ -13,7 +13,7 @@ builder.Services.AddWebOptimizer(pipeline =>
 {
     pipeline.AddCssBundle("/css/bundle.css", 
         "lib/bootstrap/dist/css/bootstrap.css",
-        "css/all.min.css",
+        "lib/fontawesome/all.min.css",
         "css/site.css");
 
     pipeline.AddJavaScriptBundle("/js/bundle.js", 

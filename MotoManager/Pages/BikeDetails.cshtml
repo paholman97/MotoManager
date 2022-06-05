@@ -4,14 +4,21 @@
     table td:nth-child(even) {
         font-weight: bold;
     }
+
+    .modal-body > table td {
+        font-weight: normal !important;
+    }
+
     @@media(max-width:768px) {
         #largeBikeIcon {
-            display: none!important;
+            display: none !important;
         }
+
         #smallBikeIcon {
-            display: inline!important;
+            display: inline !important;
         }
     }
+
     @@media(max-width: 460px) {
         .responsiveTable td {
             display: inline-block;
@@ -19,6 +26,7 @@
         }
     }
 </style>
+@Html.AntiForgeryToken()
 <div class="row justify-content-center m-0 mt-3">
     <div class="col-xl-3 col-lg-5 col-md-4">
         @if (Model.bike.ImagePath != null)
@@ -53,21 +61,21 @@
             <tr>
                 <td>Colour</td>
                 <td>@Model.bike.Colour</td>
-                <td>Engine Size</td>
+                <td>Engine size</td>
                 <td>@Model.bike.EngineSize</td>
             </tr>
             <tr>
                 <td>VIN</td>
                 <td>@Model.bike.VIN</td>
-                <td>Engine Number</td>
+                <td>Engine number</td>
                 <td>@Model.bike.EngineNumber</td>
             </tr>
             <tr>
                 <td>Mileage</td>
                 <td>
-                    @Model.bike.Mileage <a class="btn btn-dark float-end">Check</a>
+                    @Model.bike.Mileage <a class="btn btn-dark float-end" data-bs-toggle="modal" data-bs-target="#mileageCheckModal">Service check</a>
                 </td>
-                <td>Purchase Price</td>
+                <td>Purchase price</td>
                 <td>@Model.bike.PurchasePrice</td>
             </tr>
         </table>
@@ -79,8 +87,8 @@
         <table class="table w-100">
             <thead>
                 <tr>
-                    <th>Maintenance Description</th>
-                    <th>Maintenance Spec</th>
+                    <th>Maintenance description</th>
+                    <th>Maintenance spec</th>
                 </tr>
             </thead>
             <tbody>
@@ -100,8 +108,9 @@
             <thead>
                 <tr>
                     <th>Service Description</th>
-                    <th>Performed By</th>
+                    <th>Performed by</th>
                     <th>Mileage</th>
+                    <th>Due In</th>
                 </tr>
             </thead>
             <tbody>
@@ -111,18 +120,85 @@
                         <td>@serviceHistory.Description</td>
                         <td>@serviceHistory.PerformedBy</td>
                         <td>@serviceHistory.Mileage</td>
+                        <td>@serviceHistory.DueIn</td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
-<div id="mileageCheckModal" class="modal fade">
-    <div class="modal-dialog">
+<div id="mileageCheckModal" class="modal fade" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="m-0 float-start">Check services due</h2>
+                <h2 class="m-0 float-end" data-bs-dismiss="modal" style="cursor: pointer">
+                    <i class="fas fa-times"></i>
+                </h2>
+            </div>
             <div class="modal-body">
-
+                Current mileage: <input type="number" id="newMileage" /> <button class="btn btn-dark" onclick="GetServicesDue()">Check</button>
+                <hr />
+                <table class="table w-100">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Performed by</th>
+                            <th>Last performed</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody id="servicesDueList">
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+@section Scripts
+{
+    <script type="text/javascript">
+    function GetServicesDue() {
+        $("#servicesDueList").empty();
+        var currentMileage = $("#newMileage").val();
+
+        fetch("/BikeDetails/?handler=ServicesDue&" + new URLSearchParams({
+            bikeId: @Model.bike.BikeID,
+            mileage: currentMileage
+        }), {
+            method: "GET"
+        })
+        .then(response => response.json())
+        .then(data => {
+            $(data).each(function (key, val) {
+                $("#servicesDueList").append(
+                    '<tr>' +
+                        '<td>' + val.description + '</td>' +
+                        '<td>' + val.performedBy + '</td>' +
+                        '<td>' + val.mileage + '</td>' +
+                        '<td><button class="btn btn-dark" serviceHistoryId="' + val.serviceHistoryID + '" onclick="CompleteService(this)"><i class="fas fa-check"></i></button></td>' +
+                    '</tr>'
+                );
+            });
+        });
+    }
+
+    function CompleteService(completeBtn) {
+        var currentMileage = $("#newMileage").val();
+        var serviceHistoryId = $(completeBtn).attr("serviceHistoryId");
+
+        fetch("/BikeDetails/?handler=CompleteService&" + new URLSearchParams({
+            serviceHistoryId: serviceHistoryId,
+            mileage: currentMileage
+        }), {
+            method: "POST",
+            headers: {
+                RequestVerificationToken: $('input:hidden[name="__RequestVerificationToken"]').val()
+            }
+        })
+        .then(function () {
+            $("#servicesDueList").find(completeBtn).parents("tr").remove();
+        });
+    }
+    </script>
+}
