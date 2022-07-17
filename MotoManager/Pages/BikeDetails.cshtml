@@ -4,25 +4,29 @@
     table td:nth-child(even) {
         font-weight: bold;
     }
-
     .modal-body > table td {
         font-weight: normal !important;
     }
-
     @@media(max-width:768px) {
         #largeBikeIcon {
             display: none !important;
         }
-
         #smallBikeIcon {
             display: inline !important;
         }
     }
-
     @@media(max-width: 460px) {
         .responsiveTable td {
             display: inline-block;
             width: 50%;
+        }
+    }
+    @@media print {
+        #serviceCheckBtn {
+            display: none;
+        }
+        #printBtn {
+            display: none;
         }
     }
 </style>
@@ -50,7 +54,7 @@
             }
             @Model.bike.Manufacturer.ManufacturerName @Model.bike.Model
         </h3>
-        <button class="btn p-0 float-end"><i class="fas fa-pen"></i></button>
+        <button class="btn p-0 float-end" data-bs-toggle="modal" data-bs-target="#editBikeModal"><i class="fas fa-pen"></i></button>
         <table class="table responsiveTable w-100">
             <tr>
                 <td>Registration</td>
@@ -73,7 +77,8 @@
             <tr>
                 <td>Mileage</td>
                 <td>
-                    @Model.bike.Mileage <a class="btn btn-dark float-end" data-bs-toggle="modal" data-bs-target="#mileageCheckModal">Service check</a>
+                    @Model.bike.Mileage 
+                    <a id="serviceCheckBtn" class="btn btn-dark float-end" data-bs-toggle="modal" data-bs-target="#mileageCheckModal">Service check</a>
                 </td>
                 <td>Purchase price</td>
                 <td>@Model.bike.PurchasePrice</td>
@@ -126,6 +131,90 @@
             </tbody>
         </table>
     </div>
+    <div class="col-12">
+        <button id="printBtn" class="btn btn-dark" onclick="window.print()">
+            Print
+        </button>
+    </div>
+</div>
+<div id="editBikeModal" class="modal fade" data-bs-backdrop="static">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="m-0 float-start">Edit bike</h2>
+                <h2 class="m-0 float-end" data-bs-dismiss="modal" style="cursor: pointer">
+                    <i class="fas fa-times"></i>
+                </h2>
+            </div>
+            <div class="modal-body table-responsive">
+                <table class="table w-100">
+                    <tbody>
+                        <tr>
+                            <td>
+                                @if (Model.bike.ImagePath != null)
+                                {
+                                    <img src="@Model.bike.ImagePath" id="largeBikeIcon" class="editBikeIcon imgRounded shadow" />
+                                }
+                                else
+                                {
+                                    <img src="/Images/DefaultBikeImage.png" id="largeBikeIcon" class="editBikeIcon imgRounded shadow" />
+                                }
+                            </td>
+                            <td>
+                                <input type="file" id="editImage" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Registration</td>
+                            <td>
+                                <input type="text" id="editRegistration" value="@Model.bike.Registration" />
+                            </td>
+                            <td>Year</td>
+                            <td>
+                                <input type="text" id="editYear" value="@Model.bike.Year" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Colour</td>
+                            <td>
+                                <input type="text" id="editColour" value="@Model.bike.Colour" />
+                            </td>
+                            <td>Engine size</td>
+                            <td>
+                                <input type="text" id="editEngineSize" value="@Model.bike.EngineSize" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>VIN</td>
+                            <td>
+                                <input type="text" id="editVin" value="@Model.bike.VIN" />
+                            </td>
+                            <td>Engine number</td>
+                            <td>
+                                <input type="text" id="editEngineNumber" value="@Model.bike.EngineNumber" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Mileage</td>
+                            <td>
+                                <input type="text" id="editMileage" value="@Model.bike.Mileage" />
+                            </td>
+                            <td>Purchase price</td>
+                            <td>
+                                <input type="text" id="editPrice" value="@Model.bike.PurchasePrice" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button class="btn btn-dark">Save <i class="fas fa-save"></i></button>
+                                <button class="btn btn-danger" data-bs-dismiss="modal">Cancel <i class="fas fa-times"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 <div id="mileageCheckModal" class="modal fade" data-bs-backdrop="static">
     <div class="modal-dialog modal-lg">
@@ -158,6 +247,62 @@
 @section Scripts
 {
     <script type="text/javascript">
+        function EditBikeDetails() {
+            fetch("/BikeDetails/?" + new URLSearchParams({
+                handler: "SaveBikeDetails",
+                bikeId: @Model.bike.BikeID,
+                Registration: $("#editRegistration").val(),
+                Year: $("#editYear").val(),
+                Colour: $("#editColour").val(),
+                EngineSize: $("#editEngineSize").val(),
+                VIN: $("#editVin").val(),
+                EngineNumber: $("#editEngineNumber").val(),
+                Mileage: $("#editMileage").val(),
+                PurchasePrice: $("#editPrice").val()
+            }), {
+                method: "POST"
+            })
+            .then(response => response.json())
+            .then(data => {
+
+            });
+        }
+
+        function SaveBikeDetails() {
+            var bikeVm = {
+                BikeID: @Model.bike.BikeID,
+                Registratiion: $("#editRegistration").val(),
+                Year: $("#editYear").val(),
+                Colour: $("#editColour").val(),
+                EngineSize: $("#editEngineSize").val(),
+                VIN: $("#editVin").val(),
+                EngineNumber: $("#editEngineNumber").val(),
+                Mileage: $("#editMileage").val(),
+                PurchasePrice: $("#editPrice").val()
+            }
+
+            fetch("/BikeDetails/?handler=SaveBikeDetails", {
+                method: "POST",
+                body: bikeVm
+            })
+            .then(function () {
+
+            });
+        }
+
+        $("#editImage").on("change", function () {
+            var file = $(this).files[0];
+
+            fetch("/BikeDetails/?" + new URLSearchParams({
+                handler: "UpdateBikeImage",
+                bikeImage: file
+            }))
+            .then(response => response.json())
+            .then(data => {
+                $(".editBikeIcon").attr("src", data);
+            });
+        })
+
     function GetServicesDue() {
         $("#servicesDueList").empty();
         var currentMileage = $("#newMileage").val();
